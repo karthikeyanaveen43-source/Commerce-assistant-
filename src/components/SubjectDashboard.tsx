@@ -237,193 +237,122 @@ export const SubjectDashboard: React.FC<{
 
       <div className="grid md:grid-cols-12 gap-12">
         <div className="md:col-span-4 text-left">
-          <h2 className="text-5xl font-serif font-bold mb-4">{subject.name}</h2>
-          <p className="text-white/50 leading-relaxed mb-8">{subject.description}</p>
-          
-          <div className="space-y-4">
-            <div className="flex gap-1 p-1 bg-white/5 rounded-2xl border border-white/10">
-              <button 
-                onClick={() => setActiveTab('class11')}
-                className={`flex-1 py-3 px-4 rounded-xl text-sm font-bold transition-all ${activeTab === 'class11' ? 'bg-orange-500 text-white shadow-lg' : 'text-white/50 hover:text-white'}`}
-              >
-                Class 11
-              </button>
-              <button 
-                onClick={() => setActiveTab('class12')}
-                className={`flex-1 py-3 px-4 rounded-xl text-sm font-bold transition-all ${activeTab === 'class12' ? 'bg-orange-500 text-white shadow-lg' : 'text-white/50 hover:text-white'}`}
-              >
-                Class 12
-              </button>
+          <div className="sticky top-28 space-y-6">
+            <div>
+              <h2 className="text-4xl font-serif font-black mb-2 tracking-tight">{subject.name}</h2>
+              <p className="text-white/40 text-xs italic font-serif leading-relaxed">{subject.description}</p>
             </div>
+            
+            <div className="space-y-4">
+              <div className="flex gap-1 p-1 bg-white/5 rounded-2xl border border-white/10 backdrop-blur-sm">
+                <button 
+                  onClick={() => setActiveTab('class11')}
+                  className={`flex-1 py-2.5 px-4 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${activeTab === 'class11' ? 'bg-orange-500 text-white shadow-lg' : 'text-white/40 hover:text-white'}`}
+                >
+                  Volume I
+                </button>
+                <button 
+                  onClick={() => setActiveTab('class12')}
+                  className={`flex-1 py-2.5 px-4 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${activeTab === 'class12' ? 'bg-orange-500 text-white shadow-lg' : 'text-white/40 hover:text-white'}`}
+                >
+                  Volume II
+                </button>
+              </div>
 
-            <div className="space-y-8 max-h-[500px] overflow-y-auto pr-2 custom-scrollbar">
-              {chapters.length > 0 ? chapters.map((chapter, chapterIdx) => (
-                <div key={chapter.id} className="space-y-3">
-                  <div className="flex items-center justify-between gap-2 mb-2 px-2">
-                    <div className="flex items-center gap-2">
-                      <span className="w-1 h-1 rounded-full bg-orange-500" />
-                      <h5 className="text-[10px] uppercase font-black tracking-[0.4em] text-orange-500/80 mb-2 px-1">
-                        UNIT {chapterIdx + 1}
-                      </h5>
-                      <h4 className="text-sm font-bold text-white/90 leading-tight">
-                        {chapter.title}
-                      </h4>
-                    </div>
-                    <button 
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setShowChapterRecap(chapter);
-                      }}
-                      className="p-1.5 rounded-xl bg-orange-500/10 text-orange-500 hover:bg-orange-600 hover:text-white transition-all border border-orange-500/20 group/ai flex items-center gap-2 px-4 shadow-lg shadow-orange-500/5 h-10"
-                      title="AI Chapter Deep-Dive"
-                    >
-                      <Sparkles className="w-3.5 h-3.5 group-hover/ai:rotate-12 transition-transform" />
-                      <span className="text-[9px] font-black uppercase tracking-widest hidden sm:inline">Deep Recap</span>
-                    </button>
-                  </div>
-                  <div className="space-y-2">
-                    {chapter.topics.map((topic, topicIdx) => {
-                      const completed = isTopicCompleted(topic.id);
-                      return (
-                        <motion.div
-                          key={topic.id}
-                          initial={false}
-                          animate={{ 
-                            scale: completed ? 1.02 : 1,
-                            backgroundColor: selectedTopic?.id === topic.id ? 'rgba(249, 115, 22, 0.1)' : 'rgba(255, 255, 255, 0.05)'
+              <div className="bg-white/[0.02] border border-white/5 rounded-3xl p-6 shadow-2xl relative overflow-hidden group/sidebar">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-orange-500/5 blur-3xl -z-10 group-hover/sidebar:bg-orange-500/10 transition-colors" />
+                
+                <div className="flex items-center justify-between mb-6 border-b border-white/5 pb-4">
+                   <h3 className="text-xs font-black uppercase tracking-[0.3em] text-white/60 flex items-center gap-2">
+                     <Book className="w-3.5 h-3.5 text-orange-500" /> Table of Contents
+                   </h3>
+                   <span className="text-[10px] text-orange-500/50 font-mono">{chapters.length} Chapters</span>
+                </div>
+
+                <div className="space-y-8 max-h-[50vh] overflow-y-auto pr-2 custom-scrollbar">
+                  {chapters.length > 0 ? chapters.map((chapter, chapterIdx) => (
+                    <div key={chapter.id} className="space-y-3">
+                      <div className="flex items-center justify-between gap-2 mb-2 px-1">
+                        <div className="flex flex-col">
+                          <span className="text-[9px] uppercase font-black tracking-[0.4em] text-orange-500/60 mb-0.5">
+                            Unit {chapterIdx + 1}
+                          </span>
+                          <h4 className="text-xs font-black text-white/90 leading-tight uppercase tracking-wider">
+                            {chapter.title}
+                          </h4>
+                        </div>
+                        <button 
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setShowChapterRecap(chapter);
                           }}
-                          onClick={() => handleTopicSelect(topic)}
-                          role="button"
-                          tabIndex={0}
-                          onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') handleTopicSelect(topic); }}
-                          className={`w-full text-left p-4 rounded-2xl border cursor-pointer transition-all flex items-center justify-between group ${
-                            selectedTopic?.id === topic.id 
-                              ? 'border-orange-500/30 text-orange-500' 
-                              : completed 
-                                ? 'border-emerald-500/20 text-white/90 shadow-[0_0_15px_-5px_rgba(16,185,129,0.1)]' 
-                                : 'border-white/5 hover:border-white/20 text-white/70'
-                          }`}
+                          className="w-8 h-8 rounded-lg bg-orange-500/10 text-orange-500 hover:bg-orange-600 hover:text-white transition-all border border-orange-500/20 flex items-center justify-center shadow-lg shadow-orange-500/5"
+                          title="AI Recap"
                         >
-                          <div className="flex items-center gap-4">
-                            <div className={`w-10 h-10 rounded-xl flex items-center justify-center font-black text-[10px] border transition-all ${
-                              selectedTopic?.id === topic.id 
-                                ? 'bg-orange-500 text-white border-orange-400 shadow-lg' 
-                                : 'bg-white/5 border-white/10 text-white/40 group-hover:bg-white/10'
-                            }`}>
-                              {chapterIdx + 1}.{topicIdx + 1}
-                            </div>
-                            <div>
-                              <h4 className="font-bold text-sm leading-tight">{topic.title}</h4>
-                            </div>
-                            <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                                <button 
-                                 onClick={(e) => { e.stopPropagation(); setSelectedTopic(topic); setShowAITeacher(true); }}
-                                 className="p-1.5 rounded-lg bg-orange-500/10 text-orange-500 hover:bg-orange-500 hover:text-white transition-all"
-                                 title="AI Teacher Mode"
-                               >
-                                 <GraduationCap className="w-3 h-3" />
-                               </button>
-                               <button 
-                                 onClick={(e) => { e.stopPropagation(); setSelectedTopic(topic); setShowVeo(true); }}
-                                 className="p-1.5 rounded-lg bg-emerald-500/10 text-emerald-500 hover:bg-emerald-500 hover:text-white transition-all shadow-lg shadow-emerald-500/10"
-                                 title="Watch AI Masterclass"
-                               >
-                                 <Video className="w-3 h-3" />
-                               </button>
-                               <button 
-                                 onClick={(e) => { e.stopPropagation(); setSelectedTopic(topic); setShowTopicSummary(true); }}
-                                 className="p-1.5 rounded-lg bg-blue-500/10 text-blue-500 hover:bg-blue-500 hover:text-white transition-all"
-                                 title="AI Topic Summary"
-                               >
-                                 <Sparkles className="w-3 h-3" />
-                               </button>
-                            </div>
-                          </div>
-                          {completed ? (
-                            <motion.div
-                              initial={{ scale: 0, rotate: -180 }}
-                              animate={{ 
-                                scale: [0, 1.2, 1], 
-                                rotate: 0,
-                                boxShadow: [
-                                  "0 0 0px rgba(16,185,129,0)",
-                                  "0 0 20px rgba(16,185,129,0.5)",
-                                  "0 0 0px rgba(16,185,129,0)"
-                                ]
-                              }}
-                              transition={{ 
-                                type: "spring",
-                                stiffness: 260,
-                                damping: 20
-                              }}
-                              className="w-6 h-6 rounded-full bg-emerald-500/20 flex items-center justify-center border border-emerald-500/40"
+                          <Sparkles className="w-3 h-3" />
+                        </button>
+                      </div>
+                      <div className="grid gap-1">
+                        {chapter.topics.map((topic, topicIdx) => {
+                          const completed = isTopicCompleted(topic.id);
+                          const isActive = selectedTopic?.id === topic.id;
+                          return (
+                            <motion.button
+                              key={topic.id}
+                              onClick={() => handleTopicSelect(topic)}
+                              className={`w-full text-left py-2.5 px-3 rounded-xl border flex items-center gap-3 transition-all group/topic ${
+                                isActive 
+                                  ? 'bg-orange-500/10 border-orange-500/30 text-orange-500' 
+                                  : 'border-transparent text-white/40 hover:bg-white/5 hover:text-white/70'
+                              }`}
                             >
-                              <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
-                            </motion.div>
-                          ) : (
-                            <div className="w-6 h-6 rounded-full border border-white/10 group-hover:border-white/30 transition-colors" />
-                          )}
-                        </motion.div>
-                      );
-                    })}
-                  </div>
+                              <div className={`w-7 h-7 rounded-lg flex items-center justify-center font-mono text-[9px] border transition-all ${
+                                isActive 
+                                  ? 'bg-orange-500 text-white border-orange-400' 
+                                  : completed 
+                                    ? 'bg-emerald-500/20 text-emerald-500 border-emerald-500/20'
+                                    : 'bg-white/5 border-white/10 text-white/20'
+                              }`}>
+                                {chapterIdx + 1}.{topicIdx + 1}
+                              </div>
+                              <span className="text-[11px] font-bold truncate flex-1">{topic.title}</span>
+                              {completed && <CheckCircle2 className="w-3 h-3 text-emerald-500 opacity-50" />}
+                            </motion.button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )) : (
+                    <div className="p-8 text-center glass border-dashed border-white/10 rounded-2xl opacity-50 italic text-xs">
+                      Content coming soon.
+                    </div>
+                  )}
                 </div>
-              )) : (
-                <div className="p-8 text-center glass border-dashed border-white/10 rounded-2xl opacity-50 italic text-sm">
-                  Content coming soon for this grade.
-                </div>
-              )}
-            </div>
+              </div>
 
-            <div className="pt-8 border-t border-white/5 space-y-3">
-               <h5 className="text-[10px] uppercase tracking-widest text-white/30 font-bold mb-2">Academic Suite</h5>
-               <button 
-                onClick={() => setShowStudyPlan(true)}
-                className="w-full flex items-center gap-3 p-4 rounded-2xl glass border-white/5 text-white/50 hover:text-white hover:bg-orange-500/10 hover:border-orange-500/20 transition-all border group"
-               >
-                 <Calendar className="w-5 h-5 group-hover:text-orange-500" /> 
-                 <span className="font-bold">Study Plan Generator</span>
-                 <Sparkles className="w-3 h-3 text-orange-500 ml-auto" />
-               </button>
-               <button 
-                onClick={() => setShowMockExam(true)}
-                className="w-full flex items-center gap-3 p-4 rounded-2xl glass border-white/5 text-white/50 hover:text-white hover:bg-orange-500/10 hover:border-orange-500/20 transition-all border group"
-               >
-                 <FileText className="w-5 h-5 group-hover:text-orange-500" /> 
-                 <span className="font-bold">Full Mock Exam</span>
-               </button>
-
-               <div className="h-px bg-white/5 my-4" />
-
-               <h5 className="text-[10px] uppercase tracking-widest text-white/30 font-bold mb-2">Subject Tools</h5>
-               <button 
-                onClick={() => setInteractiveMode('calc')}
-                className={`w-full flex items-center gap-3 p-4 rounded-2xl border transition-all ${interactiveMode === 'calc' ? 'bg-orange-500 text-white' : 'glass border-white/5 text-white/50 hover:text-white'}`}
-               >
-                 <CalcIcon className="w-5 h-5" /> 
-                 <span className="font-bold">Calculators</span>
-               </button>
-               <button 
-                onClick={() => setInteractiveMode('graph')}
-                className={`w-full flex items-center gap-3 p-4 rounded-2xl border transition-all ${interactiveMode === 'graph' ? 'bg-orange-500 text-white' : 'glass border-white/5 text-white/50 hover:text-white'}`}
-               >
-                 <BarChart3 className="w-5 h-5" /> 
-                 <span className="font-bold">Visual Graphs</span>
-               </button>
-               <button 
-                onClick={() => setInteractiveMode('library')}
-                className={`w-full flex items-center gap-3 p-4 rounded-2xl border transition-all ${interactiveMode === 'library' ? 'bg-orange-500 text-white' : 'glass border-white/5 text-white/50 hover:text-white'}`}
-               >
-                 <BookOpen className="w-5 h-5" /> 
-                 <span className="font-bold">Reference Library</span>
-               </button>
-               <button 
-                onClick={() => setShowTimer(!showTimer)}
-                className={`w-full flex items-center gap-3 p-4 rounded-2xl border transition-all ${showTimer ? 'bg-orange-500 text-white' : 'glass border-white/5 text-white/50 hover:text-white'}`}
-               >
-                 <Timer className="w-5 h-5" /> 
-                 <span className="font-bold">Study Timer</span>
-               </button>
+              <div className="pt-4 space-y-2">
+                 <button 
+                  onClick={() => setShowStudyPlan(true)}
+                  className="w-full flex items-center gap-3 p-3.5 rounded-2xl bg-white/[0.03] border border-white/5 text-white/40 hover:text-white hover:bg-white/10 transition-all text-xs"
+                 >
+                   <Calendar className="w-4 h-4 text-orange-500" /> 
+                   <span className="font-bold">Portal Schedule</span>
+                 </button>
+                 <div className="grid grid-cols-2 gap-2">
+                    <button 
+                      onClick={() => setInteractiveMode('calc')}
+                      className={`flex items-center gap-2 p-3.5 rounded-2xl border text-xs transition-all ${interactiveMode === 'calc' ? 'bg-orange-500 text-white' : 'bg-white/[0.03] border-white/5 text-white/40'}`}
+                    >
+                      <CalcIcon className="w-4 h-4" /> <span className="font-bold">Tools</span>
+                    </button>
+                    <button 
+                      onClick={() => setInteractiveMode('library')}
+                      className={`flex items-center gap-2 p-3.5 rounded-2xl border text-xs transition-all ${interactiveMode === 'library' ? 'bg-orange-500 text-white' : 'bg-white/[0.03] border-white/5 text-white/40'}`}
+                    >
+                      <BookOpen className="w-4 h-4" /> <span className="font-bold">Library</span>
+                    </button>
+                 </div>
+              </div>
             </div>
           </div>
         </div>
